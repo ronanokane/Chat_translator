@@ -3,7 +3,8 @@
 // @namespace    Chat_translator
 // @version      v1.0
 // @description  Translate web chat messagess via shortcut keys.
-//				 CTRL+ALT+G (language translation menu) CTRL+ALT+`(translate highlighted text or input box text).
+//		  CTRL+ALT+G (language translation menu) CTRL+ALT+`(translate highlighted text or input box text).
+//		  Double click text area to translate.
 //
 // @author       Ronan O' Kane
 // @include		 https://*
