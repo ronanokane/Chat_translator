@@ -7,7 +7,7 @@
 //		  Double click text area to translate.
 //
 // @author       Ronan O' Kane
-// @include		 https://*
+// @include	 https://*
 // @require      https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @grant        GM.getValue
 // @grant        GM_getValue
@@ -17,7 +17,6 @@
 // ==/UserScript==
 
 (function() {  
-  
 	window.onload = (event) => {
         
     	let elementToAdd=document.createElement("style");
@@ -178,10 +177,8 @@
             </select>    
             <p>Press Ctrl+Alt+${String.fromCharCode(96)} on selected text or chat input. </p>
         </div>
-
       </div>`;
-    
-   	document.body.appendChild(elementToAdd);
+    document.body.appendChild(elementToAdd);
     
     const langSelect = document.getElementById("ddLangs"), 
           modal = document.getElementById("myModalTranslate"), 
@@ -192,27 +189,29 @@
       if (event.ctrlKey  &&  event.altKey  &&  event.key === "g")
         modal.style.display = "block"
     }
-
     // When the user clicks on <span> (x), close the modal
     span.onclick = ()=> {
-			modal.style.display = "none";
+    	modal.style.display = "none";
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = event=> {
-      if(event.target == modal) modal.style.display = "none";
+      if(event.target == modal) 
+	      modal.style.display = "none";
     };
-    
     // double click to translate entire element text, appending it as green colour. Use sparingly. 
     // Selection method may be better and doesn't alter page structure.
     document.addEventListener('dblclick', e=> {
       const target = e.target, text = target.innerText;  
       
-      if(target.nodeName!='DIV' && target.nodeName!='SPAN')return;
-      if(text.includes("[") || text.length > 1000)return;
+      if(target.nodeName!='DIV' && target.nodeName!='SPAN')
+      	return;
+      if(text.includes("[") || text.length > 1000)
+      	return;
       
       transText(text, 'en', output=>{
-				if(text!=output)target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`;
+      	if(text!=output)
+               target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`;
       } );
       
     }, false);
@@ -236,13 +235,10 @@
       else if (event.ctrlKey  &&  event.altKey  &&  event.key === "g")
       	modal.style.display = "block";      
     };
-  
-	};  
-
+ };  
 })();
 
-function transText(toTranslate, langCode='ru', callback)
-{
+function transText(toTranslate, langCode='ru', callback){
 	var encodedText = encodeURIComponent(toTranslate);
   	var url = "http://localhost:3000/" + langCode + "/" + encodedText;
   
@@ -254,7 +250,7 @@ function transText(toTranslate, langCode='ru', callback)
             url: url,
             onload: function(res) {
                 var resJson = JSON.parse(res.responseText);
-								callback(resJson.text);
+		callback(resJson.text);
             },
             onabort: function() {
                 console.log('There was an abort');
