@@ -220,8 +220,10 @@
 
           if(selection!=""){
             transText(selection, 'en', output=>{
-              if(output!=selection)alert(output);
-            });return;
+              if(output!=selection)
+		 alert(output);
+            });
+	    return;
           }
           const strLangCode = langSelect.value, toTranslateNode=document.activeElement;
 
