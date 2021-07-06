@@ -211,8 +211,7 @@
       transText(text, 'en', output=>{
       	if(text!=output)
                target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`;
-      } );
-      
+      });
     }, false);
        
     document.body.onkeydown=event=>{
