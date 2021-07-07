@@ -203,13 +203,13 @@
     document.addEventListener('dblclick', e=> {
       const target = e.target, text = target.innerText;  
       
-      if(target.nodeName!=='DIV' && target.nodeName!=='SPAN')
+      if(target.nodeName!='DIV' && target.nodeName!='SPAN')
       	return;
       if(text.includes("[") || text.length > 1000)
       	return;
       
       transText(text, 'en', output=>{
-      	if(text!==output)
+      	if(text!=output)
                target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`;
       });
     }, false);
@@ -218,9 +218,9 @@
     	if (event.ctrlKey  &&  event.altKey  &&  event.key === "`") {
           const selection=window.getSelection();
 
-          if(selection!==""){
+          if(selection!=""){
             transText(selection, 'en', output=>{
-              if(output!==selection)
+              if(output!=selection)
 		 alert(output);
             });
 	    return;
