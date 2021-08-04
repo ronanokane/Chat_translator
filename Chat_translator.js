@@ -226,8 +226,7 @@ function transText(toTranslate, langCode='ru', callback){
   var encodedText = encodeURIComponent(toTranslate);
   var url = "http://localhost:3000/" + langCode + "/" + encodedText;
   
-  GM.xmlHttpRequest({
-  	method: 'GET',
+  GM.xmlHttpRequest({method: 'GET',
     headers: {'Accept': 'application/json'},
     url: url,
     onload: function(res) {
