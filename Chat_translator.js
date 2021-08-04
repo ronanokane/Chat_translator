@@ -174,55 +174,52 @@ elementToAdd.innerHTML=`<div id="myModalTranslate" class="modalTranslate">
 document.body.appendChild(elementToAdd);
     
 const langSelect = document.getElementById("ddLangs"), 
-      modal = document.getElementById("myModalTranslate"), 
-      span = document.getElementsByClassName("modalTranslateClose")[0];
+    modal = document.getElementById("myModalTranslate"), 
+    span = document.getElementsByClassName("modalTranslateClose")[0];
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = ()=> {
-	modal.style.display = "none";
+    modal.style.display = "none";
 }
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = event=> {
-	if(event.target == modal) 
-		modal.style.display = "none";
+    if(event.target == modal) 
+        modal.style.display = "none";
 };
 // double click to translate entire element text, appending it as green colour. Use sparingly. 
 // Selection method may be better and doesn't alter page structure.
 document.addEventListener('dblclick', e=> {
-	const target = e.target, text = target.innerText;  
-      
-	if(target.nodeName!='DIV' && target.nodeName!='SPAN')
-		return;
-	if(text.includes("[") || text.length > 1000)
-		return;
-      
-	transText(text, 'en', output=>{
-		if(text!=output)
-			target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`;
-	});
+    const target = e.target, text = target.innerText;    
+    if(target.nodeName!='DIV' && target.nodeName!='SPAN')
+        return;
+    if(text.includes("[") || text.length > 1000)
+        return;
+    transText(text, 'en', output=>{
+	    if(text!=output)
+                target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`;
+    });
 }, false);
        
 document.body.onkeydown=event=>{
-	if (event.ctrlKey  &&  event.altKey  &&  event.key === "`") {
-  	const selection=window.getSelection();
+    if (event.ctrlKey  &&  event.altKey  &&  event.key === "`") {
+	const selection=window.getSelection();
 
 	if(selection!=""){
-		transText(selection, 'en', output=>{
-    	if(output!=selection)
-		alert(output);
-    });
-	  return;
-  }
-  const strLangCode = langSelect.value, toTranslateNode=document.activeElement;
-
- 	transText(toTranslateNode.value|| toTranslateNode.innerText, strLangCode, langIn=>{
+	    transText(selection, 'en', output=>{
+    	        if(output!=selection)
+	            alert(output);
+            });
+            return;
+        }
+        const strLangCode = langSelect.value, toTranslateNode=document.activeElement;
+        transText(toTranslateNode.value|| toTranslateNode.innerText, strLangCode, langIn=>{
             toTranslateNode.value ? toTranslateNode.value=langIn : toTranslateNode.innerText=langIn;
             transText(langIn, 'en', console.log); 
-          });
-  }
-  // display language selection popup
-  else if (event.ctrlKey  &&  event.altKey  &&  event.key === "g")
-  	modal.style.display = "block";      
+  	});
+    }
+    // display language selection popup
+    else if (event.ctrlKey  &&  event.altKey  &&  event.key === "g")
+        modal.style.display = "block";      
 };
 
 function transText(toTranslate, langCode='ru', callback){
