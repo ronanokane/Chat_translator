@@ -189,14 +189,14 @@ window.onclick = event=> {
 // double click to translate entire element text, appending it as green colour. Use sparingly. 
 // Selection method may be better and doesn't alter page structure.
 document.addEventListener('dblclick', e=> {
-    const target = e.target, text = target.innerText;    
+    const target = e.target, text = target.innerText;
     if(target.nodeName!='DIV' && target.nodeName!='SPAN')
         return;
     if(text.includes("[") || text.length > 1000)
         return;
     transText(text, 'en', output=>{
-	    if(text!=output)
-                target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`;
+        if(text!=output)
+            target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`;
     });
 }, false);
        
@@ -223,24 +223,24 @@ document.body.onkeydown=event=>{
 };
 
 function transText(toTranslate, langCode='ru', callback){
-  var encodedText = encodeURIComponent(toTranslate);
-  var url = "http://localhost:3000/" + langCode + "/" + encodedText;
+    var encodedText = encodeURIComponent(toTranslate);
+    var url = "http://localhost:3000/" + langCode + "/" + encodedText;
   
-  GM.xmlHttpRequest({method: 'GET',
-    headers: {'Accept': 'application/json'},
-    url: url,
-    onload: function(res) {
-        var resJson = JSON.parse(res.responseText);
-	callback(resJson.text);
-    },
-    onabort: function() {
-	console.log('There was an abort');
-    },
+    GM.xmlHttpRequest({method: 'GET',
+        headers: {'Accept': 'application/json'},
+        url: url,
+        onload: function(res) {
+            var resJson = JSON.parse(res.responseText);
+	    callback(resJson.text);
+        },
+        onabort: function() {
+	    console.log('There was an abort');
+        },
    	ontimeout: function() {
-    	console.log('It timeout');
-    },
-    onerror: function() {
-    	console.log('There was an error');
-    }
-  }); 
+    	    console.log('It timeout');
+        },
+        onerror: function() {
+    	    console.log('There was an error');
+        }
+    }); 
 }
