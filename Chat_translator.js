@@ -206,7 +206,7 @@ document.addEventListener('dblclick', e=> {
 		return;
 
 	transText(text, 'en', output=>{
-        text!==output&&(target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`);
+        text!==output&&(target.innerHTML+=`<span style='color:green'> [${output}] </span>`);
 	});
 }, false);
        
