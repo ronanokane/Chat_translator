@@ -4,6 +4,7 @@
 // @version      v1.0
 // @description  Translate web chat messagess via shortcut keys.
 //		  CTRL+ALT+G (choose language to translate to) CTRL+ALT+`(translate highlighted text or input box text).
+//        *NEW* Double click on input box for translation into box (if ctrl + alt + ` won' t work)
 //		  Double click received message to translate.
 //
 // @author       Ronan O' Kane
@@ -189,15 +190,23 @@ window.onclick = event=> {
 // double click to translate entire element text, appending it as green colour. Use sparingly. 
 // Selection method may be better and doesn't alter page structure.
 document.addEventListener('dblclick', e=> {
-    const target = e.target, text = target.innerText;
-    if(target.nodeName!='DIV' && target.nodeName!='SPAN')
+	const target = e.target, text = target.innerText;
+
+    if(target.nodeName==='INPUT'){
+        transText(target.value, langSelect.value, output=>{
+         target.value!==output&&(target.value=output);
+        });
         return;
-    if(text.includes("[") || text.length > 1000)
-        return;
-    transText(text, 'en', output=>{
-        if(text!=output)
-            target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`;
-    });
+    }
+
+	if(target.nodeName!=='DIV' && target.nodeName!=='SPAN')
+		return;
+	if(text.includes("[") || text.length > 400)
+		return;
+
+	transText(text, 'en', output=>{
+        text!==output(target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`);
+	});
 }, false);
        
 document.body.onkeydown=event=>{
