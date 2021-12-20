@@ -20,7 +20,7 @@ elementToAdd.innerHTML=`body {font-family: Arial, Helvetica, sans-serif;}
       .modalTranslate {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
+        z-index: 999; /* Sit on top */
         padding-top: 100px; /* Location of the box */
         left: 0;
         top: 0;
@@ -205,7 +205,7 @@ document.addEventListener('dblclick', e=> {
 		return;
 
 	transText(text, 'en', output=>{
-        text!==output(target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`);
+        text!==output&&(target.innerHTML=`${text}<span style='color:green'> [${output}] </span>`);
 	});
 }, false);
        
