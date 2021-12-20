@@ -196,6 +196,7 @@ document.addEventListener('dblclick', e=> {
     if(target.nodeName==='INPUT'){
         transText(target.value, langSelect.value, output=>{
          target.value!==output&&(target.value=output);
+         transText(output, 'en', console.log);         
         });
         return;
     }
