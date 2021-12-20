@@ -20,7 +20,7 @@ elementToAdd.innerHTML=`body {font-family: Arial, Helvetica, sans-serif;}
       .modalTranslate {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
-        z-index: 999; /* Sit on top */
+        z-index: 9999; /* Sit on top */
         padding-top: 100px; /* Location of the box */
         left: 0;
         top: 0;
@@ -33,6 +33,7 @@ elementToAdd.innerHTML=`body {font-family: Arial, Helvetica, sans-serif;}
 
       /* Modal Content */
       .modalTranslate-content {
+        color: #000;          
         background-color: #fefefe;
         margin: auto;
         padding: 20px;
