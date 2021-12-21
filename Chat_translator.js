@@ -191,24 +191,22 @@ window.onclick = event=> {
 // double click to translate entire element text, appending it as green colour. Use sparingly. 
 // Selection method may be better and doesn't alter page structure.
 document.addEventListener('dblclick', e=> {
-	const target = e.target, text = target.innerText;
+    const target = e.target, text = target.innerText;
 
     if(target.nodeName==='INPUT'){
         transText(target.value, langSelect.value, output=>{
-         target.value!==output&&(target.value=output);
-         transText(output, 'en', console.log);         
+            target.value!==output&&(target.value=output);
+            transText(output, 'en', console.log);         
         });
         return;
     }
+	if(target.nodeName!=='DIV' && target.nodeName!=='SPAN')return;
+    if(target.getElementsByClassName('translated').length>0)return;
+	if(text.length > 400)return;
 
-	if(target.nodeName!=='DIV' && target.nodeName!=='SPAN')
-		return;
-	if(text.includes("[") || text.length > 400)
-		return;
-
-	transText(text, 'en', output=>{
-        text!==output&&(target.innerHTML+=`<span style='color:green'> [${output}] </span>`);
-	});
+    transText(text, 'en', output=>{
+        text!==output&&(target.innerHTML+=`<span class="translated" style='color:green'> [${output}] </span>`);
+    });
 }, false);
        
 document.body.onkeydown=event=>{
