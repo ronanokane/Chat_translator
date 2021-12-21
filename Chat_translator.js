@@ -229,22 +229,18 @@ document.body.onkeydown=event=>{
         });
     }
     // display language selection popup
-    else if (event.ctrlKey  &&  event.altKey  &&  event.key === "g")
-        modal.style.display = "block";      
+    else if (event.ctrlKey  &&  event.altKey  &&  event.key === "g") modal.style.display = "block";      
 };
 
 // need this to change input element .value because of react
 function changeInputValue(lastVal, newVal, inputNode){
-    let lastValue = '';
     inputNode.value = newVal;
     let event = new Event('input', { bubbles: true });
     // hack React15
     event.simulated = true;
     // hack React16 内部定义了descriptor拦截value，此处重置状态
     let tracker = inputNode._valueTracker;
-    if (tracker) {
-        tracker.setValue(lastValue);
-    }
+    if (tracker) tracker.setValue(lastVal);
     inputNode.dispatchEvent(event);
 }
 
