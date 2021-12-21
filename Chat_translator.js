@@ -200,9 +200,9 @@ document.addEventListener('dblclick', e=> {
         });
         return;
     }
-	if(target.nodeName!=='DIV' && target.nodeName!=='SPAN')return;
+    if(target.nodeName!=='DIV' && target.nodeName!=='SPAN')return;
     if(target.getElementsByClassName('translated').length>0)return;
-	if(text.length > 400)return;
+    if(text.length > 400)return;
 
     transText(text, 'en', output=>{
         text!==output&&(target.innerHTML+=`<span class="translated" style='color:green'> [${output}] </span>`);
@@ -211,20 +211,23 @@ document.addEventListener('dblclick', e=> {
        
 document.body.onkeydown=event=>{
     if (event.ctrlKey  &&  event.altKey  &&  event.key === "`") {
-	const selection=window.getSelection();
+        const selection=window.getSelection().toString();
 
-	if(selection!=""){
-	    transText(selection, 'en', output=>{
-    	        if(output!=selection)
-	            alert(output);
+        if(selection!==""){
+            transText(selection, 'en', output=>{
+    	        output!==selection&&alert(output);
             });
             return;
         }
+
         const strLangCode = langSelect.value, toTranslateNode=document.activeElement;
+        if(toTranslateNode.nodeName!=='DIV' && toTranslateNode.nodeName!=='SPAN' && toTranslateNode.nodeName!=='INPUT')return;        
+        if(toTranslateNode.length > 400)return;
+
         transText(toTranslateNode.value|| toTranslateNode.innerText, strLangCode, langIn=>{
             toTranslateNode.value ? toTranslateNode.value=langIn : toTranslateNode.innerText=langIn;
             transText(langIn, 'en', console.log); 
-  	});
+        });
     }
     // display language selection popup
     else if (event.ctrlKey  &&  event.altKey  &&  event.key === "g")
