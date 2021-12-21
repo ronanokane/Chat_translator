@@ -176,8 +176,8 @@ elementToAdd.innerHTML=`<div id="myModalTranslate" class="modalTranslate">
 document.body.appendChild(elementToAdd);
     
 const langSelect = document.getElementById("ddLangs"), 
-    modal = document.getElementById("myModalTranslate"), 
-    span = document.getElementsByClassName("modalTranslateClose")[0];
+modal = document.getElementById("myModalTranslate"), 
+span = document.getElementsByClassName("modalTranslateClose")[0];
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = ()=> {
@@ -195,7 +195,7 @@ document.addEventListener('dblclick', e=> {
 
     if(target.nodeName==='INPUT'){
         transText(target.value, langSelect.value, output=>{
-            target.value!==output&&(target.value=output);
+            target.value!==output&&changeInputValue(target.value, output, target);
             transText(output, 'en', console.log);         
         });
         return;
@@ -219,13 +219,12 @@ document.body.onkeydown=event=>{
             });
             return;
         }
-
         const strLangCode = langSelect.value, toTranslateNode=document.activeElement;
         if(toTranslateNode.nodeName!=='DIV' && toTranslateNode.nodeName!=='SPAN' && toTranslateNode.nodeName!=='INPUT')return;        
         if(toTranslateNode.length > 400)return;
 
         transText(toTranslateNode.value|| toTranslateNode.innerText, strLangCode, langIn=>{
-            toTranslateNode.value ? toTranslateNode.value=langIn : toTranslateNode.innerText=langIn;
+            toTranslateNode.value ? changeInputValue(toTranslateNode.value, langIn, toTranslateNode) : toTranslateNode.innerText=langIn;
             transText(langIn, 'en', console.log); 
         });
     }
@@ -233,6 +232,21 @@ document.body.onkeydown=event=>{
     else if (event.ctrlKey  &&  event.altKey  &&  event.key === "g")
         modal.style.display = "block";      
 };
+
+// need this to change input element .value because of react
+function changeInputValue(lastVal, newVal, inputNode){
+    let lastValue = '';
+    inputNode.value = newVal;
+    let event = new Event('input', { bubbles: true });
+    // hack React15
+    event.simulated = true;
+    // hack React16 内部定义了descriptor拦截value，此处重置状态
+    let tracker = inputNode._valueTracker;
+    if (tracker) {
+        tracker.setValue(lastValue);
+    }
+    inputNode.dispatchEvent(event);
+}
 
 function transText(toTranslate, langCode='ru', callback){
     var encodedText = encodeURIComponent(toTranslate);
