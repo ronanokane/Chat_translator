@@ -12,7 +12,7 @@
 // @run-at document-end
 // @grant        GM.xmlHttpRequest
 // ==/UserScript==
-        
+
 let elementToAdd=document.createElement("style");
 elementToAdd.innerHTML=`body {font-family: Arial, Helvetica, sans-serif;}
 
@@ -33,7 +33,7 @@ elementToAdd.innerHTML=`body {font-family: Arial, Helvetica, sans-serif;}
 
       /* Modal Content */
       .modalTranslate-content {
-        color: #000;          
+        color: #000;
         background-color: #fefefe;
         margin: auto;
         padding: 20px;
@@ -55,128 +55,24 @@ elementToAdd.innerHTML=`body {font-family: Arial, Helvetica, sans-serif;}
         text-decoration: none;
         cursor: pointer;
       }`;
-    
+
 document.head.appendChild(elementToAdd);
 elementToAdd=document.createElement("div");
-    	
+
 elementToAdd.innerHTML=`<div id="myModalTranslate" class="modalTranslate">
         <div class="modalTranslate-content">
           <span class="modalTranslateClose">&times;</span>
       <span>Translate to:  </span>
-      <select id='ddLangs'><option value='af'>afrikaans</option>
-            <option value='sq'>albanian</option>
-            <option value='am'>amharic</option>
-            <option value='ar'>arabic</option>
-            <option value='hy'>armenian</option>
-            <option value='az'>azerbaijani</option>
-            <option value='eu'>basque</option>
-            <option value='be'>belarusian</option>
-            <option value='bn'>bengali</option>
-            <option value='bs'>bosnian</option>
-            <option value='bg'>bulgarian</option>
-            <option value='ca'>catalan</option>
-            <option value='ceb'>cebuano</option>
-            <option value='ny'>chichewa</option>
-            <option value='zh-cn'>chinese (simplified)</option>
-            <option value='zh-tw'>chinese (traditional)</option>
-            <option value='co'>corsican</option>
-            <option value='hr'>croatian</option>
-            <option value='cs'>czech</option>
-            <option value='da'>danish</option>
-            <option value='nl'>dutch</option>
-            <option value='en'>english</option>
-            <option value='eo'>esperanto</option>
-            <option value='et'>estonian</option>
-            <option value='tl'>filipino</option>
-            <option value='fi'>finnish</option>
-            <option value='fr'>french</option>
-            <option value='fy'>frisian</option>
-            <option value='gl'>galician</option>
-            <option value='ka'>georgian</option>
-            <option value='de'>german</option>
-            <option value='el'>greek</option>
-            <option value='gu'>gujarati</option>
-            <option value='ht'>haitian creole</option>
-            <option value='ha'>hausa</option>
-            <option value='haw'>hawaiian</option>
-            <option value='iw'>hebrew</option>
-            <option value='hi'>hindi</option>
-            <option value='hmn'>hmong</option>
-            <option value='hu'>hungarian</option>
-            <option value='is'>icelandic</option>
-            <option value='ig'>igbo</option>
-            <option value='id'>indonesian</option>
-            <option value='ga'>irish</option>
-            <option value='it'>italian</option>
-            <option value='ja'>japanese</option>
-            <option value='jw'>javanese</option>
-            <option value='kn'>kannada</option>
-            <option value='kk'>kazakh</option>
-            <option value='km'>khmer</option>
-            <option value='ko'>korean</option>
-            <option value='ku'>kurdish (kurmanji)</option>
-            <option value='ky'>kyrgyz</option>
-            <option value='lo'>lao</option>
-            <option value='la'>latin</option>
-            <option value='lv'>latvian</option>
-            <option value='lt'>lithuanian</option>
-            <option value='lb'>luxembourgish</option>
-            <option value='mk'>macedonian</option>
-            <option value='mg'>malagasy</option>
-            <option value='ms'>malay</option>
-            <option value='ml'>malayalam</option>
-            <option value='mt'>maltese</option>
-            <option value='mi'>maori</option>
-            <option value='mr'>marathi</option>
-            <option value='mn'>mongolian</option>
-            <option value='my'>myanmar (burmese)</option>
-            <option value='ne'>nepali</option>
-            <option value='no'>norwegian</option>
-            <option value='ps'>pashto</option>
-            <option value='fa'>persian</option>
-            <option value='pl'>polish</option>
-            <option value='pt'>portuguese</option>
-            <option value='pa'>punjabi</option>
-            <option value='ro'>romanian</option>
-            <option value='ru' selected='selected'>russian</option>
-            <option value='sm'>samoan</option>
-            <option value='gd'>scots gaelic</option>
-            <option value='sr'>serbian</option>
-            <option value='st'>sesotho</option>
-            <option value='sn'>shona</option>
-            <option value='sd'>sindhi</option>
-            <option value='si'>sinhala</option>
-            <option value='sk'>slovak</option>
-            <option value='sl'>slovenian</option>
-            <option value='so'>somali</option>
-            <option value='es'>spanish</option>
-            <option value='su'>sundanese</option>
-            <option value='sw'>swahili</option>
-            <option value='sv'>swedish</option>
-            <option value='tg'>tajik</option>
-            <option value='ta'>tamil</option>
-            <option value='te'>telugu</option>
-            <option value='th'>thai</option>
-            <option value='tr'>turkish</option>
-            <option value='uk'>ukrainian</option>
-            <option value='ur'>urdu</option>
-            <option value='uz'>uzbek</option>
-            <option value='vi'>vietnamese</option>
-            <option value='cy'>welsh</option>
-            <option value='xh'>xhosa</option>
-            <option value='yi'>yiddish</option>
-            <option value='yo'>yoruba</option>
-            <option value='zu'>zulu</option>
-            <option value='fil'>Filipino</option>
-            <option value='he'>Hebrew</option>
-            </select>    
+      <select id='ddLangs'>
+      ${Object.entries(await languages()).map((item)=>item[0]==='ru' && '<option value=\'ru\' selected=\'selected\'>russian</option>' || '<option value=\'' + item[0] + '\'>' + item[1] + '</option>').join('\n')}
+            </select>
             <p>Press Ctrl+Alt+${String.fromCharCode(96)} on selected text or chat input. </p>
         </div>
       </div>`;
 document.body.appendChild(elementToAdd);
-    
-const langSelect = document.getElementById("ddLangs"), 
-modal = document.getElementById("myModalTranslate"), 
+
+const langSelect = document.getElementById("ddLangs"),
+modal = document.getElementById("myModalTranslate"),
 span = document.getElementsByClassName("modalTranslateClose")[0];
 
 // When the user clicks on <span> (x), close the modal
@@ -185,32 +81,35 @@ span.onclick = ()=> {
 }
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = event=> {
-    if(event.target == modal) 
+    if(event.target == modal)
         modal.style.display = "none";
 };
-// double click to translate entire element text, appending it as green colour. Use sparingly. 
+// double click to translate entire element text, appending it as green colour. Use sparingly.
 // Selection method may be better and doesn't alter page structure.
 document.addEventListener('dblclick', e=> {
     const target = e.target, text = target.innerText;
 
+        alert('got here')
+
+    if(text.length < 2 || text.length > 400) return;
+    if(target.getElementsByClassName('translated').length>0)return;
     if(target.nodeName==='INPUT'){
         transText(target.value, langSelect.value, output=>{
             target.value!==output&&changeInputValue(target.value, output, target);
-            transText(output, 'en', console.log);         
+            transText(output, 'en', console.log);
         });
         return;
     }
-    if(target.nodeName!=='DIV' && target.nodeName!=='SPAN')return;
-    if(target.getElementsByClassName('translated').length>0)return;
-    if(text.length > 400)return;
+
+    alert('got here')
 
     transText(text, 'en', output=>{
         text!==output&&(target.innerHTML+=`<span class="translated" style='color:green'> [${output}] </span>`);
     });
 }, false);
-       
+
 document.body.onkeydown=event=>{
-    if (event.ctrlKey  &&  event.altKey  &&  event.key === "`") {
+    if (event.ctrlKey && event.altKey && event.key === "`") {
         const selection=window.getSelection().toString();
 
         if(selection!==""){
@@ -220,16 +119,16 @@ document.body.onkeydown=event=>{
             return;
         }
         const strLangCode = langSelect.value, toTranslateNode=document.activeElement;
-        if(toTranslateNode.nodeName!=='DIV' && toTranslateNode.nodeName!=='SPAN' && toTranslateNode.nodeName!=='INPUT')return;        
+        if(toTranslateNode.nodeName!=='DIV' && toTranslateNode.nodeName!=='SPAN' && toTranslateNode.nodeName!=='INPUT')return;
         if(toTranslateNode.length > 400)return;
 
         transText(toTranslateNode.value|| toTranslateNode.innerText, strLangCode, langIn=>{
             toTranslateNode.value ? changeInputValue(toTranslateNode.value, langIn, toTranslateNode) : toTranslateNode.innerText=langIn;
-            transText(langIn, 'en', console.log); 
+            transText(langIn, 'en', console.log);
         });
     }
     // display language selection popup
-    else if (event.ctrlKey  &&  event.altKey  &&  event.key === "g") modal.style.display = "block";      
+    else if (event.ctrlKey && event.altKey && event.key === "g") modal.style.display = "block";
 };
 
 // need this to change input element .value because of react
@@ -247,7 +146,7 @@ function changeInputValue(lastVal, newVal, inputNode){
 function transText(toTranslate, langCode='ru', callback){
     var encodedText = encodeURIComponent(toTranslate);
     var url = "http://localhost:3000/" + langCode + "/" + encodedText;
-  
+
     GM.xmlHttpRequest({method: 'GET',
         headers: {'Accept': 'application/json'},
         url: url,
@@ -258,11 +157,22 @@ function transText(toTranslate, langCode='ru', callback){
         onabort: function() {
 	    console.log('There was an abort');
         },
-   	ontimeout: function() {
+   	    ontimeout: function() {
     	    console.log('It timeout');
         },
         onerror: function() {
     	    console.log('There was an error');
         }
-    }); 
+    });
+}
+
+function languages(){
+    return new Promise((resolve, reject)=>{
+        GM.xmlHttpRequest({method: 'GET',
+                       headers:{'Accept': 'application/json'},
+                       url: "http://localhost:3000/languages",
+                       onload: (res)=>resolve(JSON.parse(res.responseText)),
+                       onerror: ()=>reject("Error")
+        })
+    })
 }
