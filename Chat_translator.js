@@ -89,8 +89,6 @@ window.onclick = event=> {
 document.addEventListener('dblclick', e=> {
     const target = e.target, text = target.innerText;
 
-        alert('got here')
-
     if(text.length < 2 || text.length > 400) return;
     if(target.getElementsByClassName('translated').length>0)return;
     if(target.nodeName==='INPUT'){
@@ -100,9 +98,6 @@ document.addEventListener('dblclick', e=> {
         });
         return;
     }
-
-    alert('got here')
-
     transText(text, 'en', output=>{
         text!==output&&(target.innerHTML+=`<span class="translated" style='color:green'> [${output}] </span>`);
     });
