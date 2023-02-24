@@ -76,54 +76,51 @@ modal = document.getElementById("myModalTranslate"),
 span = document.getElementsByClassName("modalTranslateClose")[0];
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = ()=> {
-    modal.style.display = "none";
-}
+span.onclick = ()=>(modal.style.display = "none");
+
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = event=> {
-    if(event.target == modal)
-        modal.style.display = "none";
-};
+window.onclick = (event)=> event.target == modal && (modal.style.display = "none");
+
 // double click to translate entire element text, appending it as green colour. Use sparingly.
 // Selection method may be better and doesn't alter page structure.
-document.addEventListener('dblclick', e=> {
-    const target = e.target, text = target.innerText;
+document.addEventListener('dblclick', async e=> {
+    const target = e.target, text = target.innerText.trim();
 
     if(text.length < 2 || text.length > 400) return;
-    if(target.getElementsByClassName('translated').length>0)return;
+    if(target.getElementsByClassName('translated').length>0) return;
     if(target.nodeName==='INPUT'){
-        transText(target.value, langSelect.value, output=>{
-            target.value!==output&&changeInputValue(target.value, output, target);
-            transText(output, 'en', console.log);
-        });
-        return;
+        let translated= await transText(target.value, langSelect.value)
+        target.value!==translated && changeInputValue(target.value, translated, target);
+        return console.log(await transText(translated, 'en'))
     }
-    transText(text, 'en', output=>{
-        text!==output&&(target.innerHTML+=`<span class="translated" style='color:green'> [${output}] </span>`);
-    });
+    let translated = await transText(text, 'en');
+    text!==translated && (target.innerHTML+=`<span class="translated" style='color:green'> [${translated}] </span>`);
+
 }, false);
 
-document.body.onkeydown=event=>{
+document.body.onkeydown=async event=>{
     if (event.ctrlKey && event.altKey && event.key === "`") {
         const selection=window.getSelection().toString();
 
-        if(selection!==""){
-            transText(selection, 'en', output=>{
-    	        output!==selection&&alert(output);
-            });
-            return;
+        if(selection!=="") {
+            let translated=await transText(selection, 'en');
+
+            if(translated!==selection) 
+                return alert(translated);
         }
         const strLangCode = langSelect.value, toTranslateNode=document.activeElement;
-        if(toTranslateNode.nodeName!=='DIV' && toTranslateNode.nodeName!=='SPAN' && toTranslateNode.nodeName!=='INPUT')return;
-        if(toTranslateNode.length > 400)return;
 
-        transText(toTranslateNode.value|| toTranslateNode.innerText, strLangCode, langIn=>{
-            toTranslateNode.value ? changeInputValue(toTranslateNode.value, langIn, toTranslateNode) : toTranslateNode.innerText=langIn;
-            transText(langIn, 'en', console.log);
-        });
+        if(toTranslateNode.nodeName!=='DIV' && toTranslateNode.nodeName!=='SPAN' && toTranslateNode.nodeName!=='INPUT') return;
+        if(toTranslateNode.length > 400) return;
+
+        let translated= await transText(toTranslateNode.value|| toTranslateNode.innerText, strLangCode)
+
+        toTranslateNode.value ? changeInputValue(toTranslateNode.value, translated, toTranslateNode) : toTranslateNode.innerText=translated;
+        console.log(await transText(translated, 'en'));
     }
     // display language selection popup
-    else if (event.ctrlKey && event.altKey && event.key === "g") modal.style.display = "block";
+    else if (event.ctrlKey && event.altKey && event.key === "g")
+        modal.style.display = "block";
 };
 
 // need this to change input element .value because of react
@@ -138,27 +135,17 @@ function changeInputValue(lastVal, newVal, inputNode){
     inputNode.dispatchEvent(event);
 }
 
-function transText(toTranslate, langCode='ru', callback){
-    var encodedText = encodeURIComponent(toTranslate);
-    var url = "http://localhost:3000/" + langCode + "/" + encodedText;
-
-    GM.xmlHttpRequest({method: 'GET',
-        headers: {'Accept': 'application/json'},
-        url: url,
-        onload: function(res) {
-            var resJson = JSON.parse(res.responseText);
-	    callback(resJson.text);
-        },
-        onabort: function() {
-	    console.log('There was an abort');
-        },
-   	    ontimeout: function() {
-    	    console.log('It timeout');
-        },
-        onerror: function() {
-    	    console.log('There was an error');
-        }
-    });
+function transText(toTranslate, langCode='ru'){
+    return new Promise((resolve, reject)=>{
+        GM.xmlHttpRequest({method: 'GET',
+                           headers: {'Accept': 'application/json'},
+                           url: "http://localhost:3000/" + langCode + "/" + encodeURIComponent(toTranslate),
+                           onload: (res)=> resolve(JSON.parse(res.responseText).text),
+                           onabort: ()=>reject("Abort"),
+                           ontimeout: ()=>reject("Timeout"),
+                           onerror: ()=>reject("Error")
+        })
+    })
 }
 
 function languages(){
